@@ -4,34 +4,19 @@ import Prelude;
 import Abstract;
 import Load;
 
+//data PicoValue = natval(int n) | strval(str s) | errorval(loc l, str msg);
+//
+//alias VENV = map[PicoId, PicoValue];  
 
-data PicoValue = natval(int n) | strval(str s) | errorval(loc l, str msg);  /*1*/
+public tuple[int location, bool loop, str char] pointer = <0, false, "">;
 
-alias VENV = map[PicoId, PicoValue];                                        /*2*/
+public void initPointer(){
+	pointer = <0, false, "">;
+}
 
-// Evaluate Expressions.
+public list[int] array = [];
 
-PicoValue evalExp(exp:natCon(int N), VENV env) = natval(N);
 
-PicoValue evalExp(exp:strCon(str S), VENV env) = strval(S);
-
-PicoValue evalExp(exp:id(PicoId Id), VENV env)  = 
-    env[Id]?  ? env[Id] : errorval(exp@location, "Uninitialized variable <Id>");
-
-PicoValue evalExp(exp:add(EXP E1, EXP E2), VENV env) = 
-   (natval(n1) := evalExp(E1, env) && 
-    natval(n2) := evalExp(E2, env)) ? natval(n1 + n2)
-                                    : errorval(exp@location, "+ requires natural arguments");
-  
-PicoValue evalExp(exp:sub(EXP E1, EXP E2), VENV env) = 
-   (natval(n1) := evalExp(E1, env) && 
-    natval(n2) := evalExp(E2, env)) ? natval(n1 - n2)
-                                    : errorval(exp@location, "- requires natural arguments");
-                                                                     
-PicoValue evalExp(exp:conc(EXP E1, EXP E2), VENV env) = 
-   (strval(s1) := evalExp(E1, env) && 
-    strval(s2) := evalExp(E2, env)) ? strval(s1 + s2)
-                                    : errorval(exp@location, "|| requires string arguments");
 
 // Evaluate a statement
 
