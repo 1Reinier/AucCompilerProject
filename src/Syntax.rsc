@@ -15,7 +15,7 @@ syntax Statement
 	= whileStat: "[" Statement+ body "]"
 	| incr: "+"
 	| decr: "-"
-	| left: "\< "
+	| left: "\<"
 	| right: "\>"
 	| read: ","
 	| output: "."
