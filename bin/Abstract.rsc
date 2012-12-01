@@ -1,19 +1,14 @@
 module Abstract
 	  	  
 public data PROGRAM =
-  program(list[STATEMENT] stats, str input);
+  program(list[STATEMENT] stats);
     
 public data STATEMENT =
       whileStat(list[STATEMENT] body)
 	 | incr()
 	 | decr()
-	 | left()
-	 | right()
+	 | goleft()
+	 | goright()
 	 | read()
 	 | output()
      ;
-
-anno loc PROGRAM@location;
-anno loc STATEMENT@location;
-
-public alias Occurrence = tuple[loc location, STATEMENT stat];

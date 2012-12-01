@@ -12,14 +12,14 @@ public ENV initEnv(){
 	pointer = 0;
 	array = for(n <- [1..30000])
 				append 0;
-	input = "";
-	output = "";
+	str input = "";
+	str output = "";
 	return <pointer, array, input, output>;
 }
 
 // Evaluate program
 
-public ENV evalProgram(PROGRAM P){
+public str evalProgram(PROGRAM P){
 	if(program(list[STATEMENT] stats, str input) := P){
 		env = initEnv();
 		env.input = input;
@@ -60,7 +60,7 @@ public ENV evalStat(decr(), ENV env){
 	return env;
 }
 
-public ENV evalStat(left(), ENV env){
+public ENV evalStat(goleft(), ENV env){
 	if(env.pointer > 0){
 		env.pointer -= 1;
 		return env;
@@ -69,7 +69,7 @@ public ENV evalStat(left(), ENV env){
 		throw "pointer out of bounds";
 }
 
-public ENV evalStat(right(), ENV env){
+public ENV evalStat(goright(), ENV env){
 	if(env.pointer < 30000){
 		env.pointer += 1;
 		return env;
