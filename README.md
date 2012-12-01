@@ -1,6 +1,7 @@
 This is our project for AUC course 'Advanced Programming'.
+--
 
-Dec-1, 2012
+*Dec-1, 2012*
 
     a. Parser done
     
@@ -17,7 +18,7 @@ Still needed:
  
 --
 
-Nov-15, 2012
+*Nov-15, 2012*
 
 Today we decided to proceed in the following way:
 
