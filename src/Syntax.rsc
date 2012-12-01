@@ -4,12 +4,12 @@ import Prelude;
 
 lexical Char  = "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]";
 
-layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
+layout Layout = WhitespaceAndComment* !>> [\ \t\n\r];
 
 lexical WhitespaceAndComment = [\ \t\n\r];
 
 start syntax Program 
-   = program: Statement* body;
+   = program: Statement+ body Input* input;
    
 syntax Statement 
 	= whileStat: "[" Statement+ body "]"
@@ -21,6 +21,7 @@ syntax Statement
 	| output: "."
 	;
 
+syntax Input = [a-zA-Z0-9!@#$%ˆ&*()];
 
 public start[Program] program(str s) {
   return parse(#start[Program], s);
