@@ -1,4 +1,4 @@
-This is our project for AUC course 'Advanced Programming'.
+This is our project for AUC course 'Advanced Programming'
 --
 
 *Dec-1, 2012*
