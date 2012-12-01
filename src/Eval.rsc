@@ -94,3 +94,14 @@ public ENV evalStat(output(), ENV env){
 	env.output += stringChar(env.array[env.pointer]);
 	return env;
 }
+
+// Tests:
+
+public PROGRAM HelloWorld
+	 = load("\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
+	 		[\<++++\>-]\<.\>\>\>++++++++++[\<+++++ ++++\>-]\<---.\<\<\<\<.+++.------.--------.
+	 		\>\>+.");	 		
+// Working
+
+public PROGRAM allChars = load(".+[.+]");
+// not yet working!

@@ -2,14 +2,14 @@ module Syntax
 
 import Prelude;
 
-lexical Char  = "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]";
+// lexical Char  = "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]";
 
-layout Layout = WhitespaceAndComment* !>> [\ \t\n\r%];
+layout Layout = WhitespaceAndComment* !>> [\ \t\n\r];
 
-lexical WhitespaceAndComment = [\ \t\n\r];
+lexical WhitespaceAndComment = [\ \t\n\r%];
 
 start syntax Program 
-   = program: Statement+ body;
+   = program: Statement+ body;// Input* input;
    
 syntax Statement 
 	= whileStat: "[" Statement+ body "]"
@@ -22,7 +22,7 @@ syntax Statement
 	;
 
 //syntax Input 
-//	= input: [a-zA-Z0-9!@#$ˆ&*()];
+//	= input: [.]*;
 
 public start[Program] program(str s) {
   return parse(#start[Program], s);
