@@ -6,14 +6,17 @@ Dec-1, 2012
     
     b. Evaluator done
     
-Needed: 
+Still needed: 
 
     - input processing
     
     - compiler?
     
     etc.
-        
+ 
+ 
+ 
+ 
 
 Nov-15, 2012
 
