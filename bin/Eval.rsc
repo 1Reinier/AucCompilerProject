@@ -1,17 +1,17 @@
 module Eval
 
 import Prelude;
-import String;
 import Abstract;
-import Load;
+import Syntax;
+//import Load;
 
 alias Tape = list[int];
 alias ENV = tuple[int pointer, Tape array, str input, str output];
 
 public ENV initEnv(){
 	pointer = 0;
-	array = for(n <- [1..30000])
-				append 0;
+	//Make Array smaller for memory purposes, add extra cells as needed. "lazy" implementation
+	array = [0,0];
 	str input = "";
 	str output = "";
 	return <pointer, array, input, output>;
@@ -71,8 +71,11 @@ public ENV evalStat(goleft(), ENV env){
 
 public ENV evalStat(goright(), ENV env){
 	if(env.pointer < 30000){
-		env.pointer += 1;
-		return env;
+		if(size(env.array) <= env.pointer+1){
+			env.array += [0];
+			}
+			env.pointer += 1;
+			return env;
 	}
 	else
 		throw "pointer out of bounds";
@@ -96,12 +99,17 @@ public ENV evalStat(output(), ENV env){
 }
 
 // Tests:
+public PROGRAM  load(str txt) = implode(#PROGRAM, parse(#Program, txt));
 
-public PROGRAM HelloWorld
-	 = load("\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
+test bool HelloWorld(){
+	 try load("\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
 	 		[\<++++\>-]\<.\>\>\>++++++++++[\<+++++ ++++\>-]\<---.\<\<\<\<.+++.------.--------.
-	 		\>\>+.");	 		
-// Working
-
-public PROGRAM allChars = load(".+[.+]");
-// not yet working!
+	 		\>\>+.");
+	 catch: return false;
+	 return true;
+	 }
+	 	
+test bool testEval(){
+	str code = "\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++[\<++++\>-]\<.\>\>\>++++++++++[\<+++++ ++++\>-]\<---.\<\<\<\<.+++.------.--------.\>\>+.";
+	return evalProgram(load(code)) == "Hello World!";
+	}

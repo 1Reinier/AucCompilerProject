@@ -1,7 +1,5 @@
 module Syntax
 
-import Prelude;
-
 // lexical Char  = "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]";
 
 layout Layout = WhitespaceAndComment* !>> [\ \t\n\r];
