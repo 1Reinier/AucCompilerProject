@@ -45,7 +45,7 @@ public ENV evalStats(list[STATEMENT] stats, ENV env){
 
 public ENV evalStat(whileStat(list[STATEMENT] body), ENV env){
 	while(env.array[env.pointer] != 0){
-		evalStats(body, env);
+		env = evalStats(body, env);
 	}
 	return env;
 }
