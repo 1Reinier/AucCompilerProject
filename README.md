@@ -1,11 +1,17 @@
 This is our project for AUC course 'Advanced Programming'.
 
 Dec-1, 2012
+
     a. Parser done
+    
     b. Evaluator done
+    
 Needed: 
+
     - input processing
+    
     - compiler?
+    
     etc.
         
 
