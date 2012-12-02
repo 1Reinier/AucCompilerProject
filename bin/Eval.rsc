@@ -1,9 +1,8 @@
 module Eval
 
 import Prelude;
-import Abstract;
-import Syntax;
-//import Load;
+import Abstract; //needed for load(); is not part of Eval (it creates the Abstract Syntax Tree);
+import Syntax; 
 
 alias Tape = list[int];
 alias ENV = tuple[int pointer, Tape array, str input, str output];
@@ -20,6 +19,7 @@ public ENV initEnv(){
 // Evaluate program
 
 public str evalProgram(PROGRAM P){
+	//this is for programs with input
 	if(program(list[STATEMENT] stats, str input) := P){
 		env = initEnv();
 		env.input = input;
@@ -99,7 +99,6 @@ public ENV evalStat(output(), ENV env){
 }
 
 // Tests:
-public PROGRAM  load(str txt) = implode(#PROGRAM, parse(#Program, txt));
 
 test bool HelloWorld(){
 	 try load("\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
@@ -110,6 +109,8 @@ test bool HelloWorld(){
 	 }
 	 	
 test bool testEval(){
-	str code = "\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++[\<++++\>-]\<.\>\>\>++++++++++[\<+++++ ++++\>-]\<---.\<\<\<\<.+++.------.--------.\>\>+.";
+	str code = "\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
+				[\<++++\>-]\<.\>\>\>++++++++++[\<+++++ ++++\>-]\<---.\<\<\<\<.+++.------.--------.
+				\>\>+.";
 	return evalProgram(load(code)) == "Hello World!";
 	}

@@ -1,4 +1,8 @@
 module Abstract
+
+import Syntax;
+import Abstract;
+import ParseTree;
 	  	  
 public data PROGRAM =
   program(list[STATEMENT] stats);
@@ -12,3 +16,8 @@ public data STATEMENT =
 	 | read()
 	 | output()
      ;
+
+// Load a Parse Tree:
+// (makes Abstract Syntax Tree)
+
+public PROGRAM  load(str txt) = implode(#PROGRAM, parse(#Program, txt));
