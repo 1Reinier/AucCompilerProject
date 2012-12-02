@@ -7,7 +7,7 @@ layout Layout = WhitespaceAndComment* !>> [\ \t\n\r];
 lexical WhitespaceAndComment = [\ \t\n\r%];
 
 start syntax Program 
-   = program: Statement+ body; //Input* input;
+   = program: Statement+ body;// Input* input;
    
 syntax Statement 
 	= whileStat: "[" Statement+ body "]"
@@ -20,7 +20,7 @@ syntax Statement
 	;
 
 //syntax Input 
-//	= input: [.]*;
+//	= input: [.]* << "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]" !<< Input;
 
 // Parse Brainfuck code: 
 // (makes Parse Tree)
