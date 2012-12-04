@@ -3,8 +3,7 @@ module Eval
 import Prelude;
 extend Abstract;
 extend Syntax;
-//import Load;
-
+import util::IDE;
 
 alias Tape = list[int];
 alias ENV = tuple[int pointer, Tape array, str input, str output];
@@ -21,15 +20,18 @@ public ENV initEnv(){
 // Evaluate program
 
 public str evalProgram(PROGRAM P){
-	//this is for programs with input
-	if(program(list[STATEMENT] stats, str input) := P){
+	if(program(list[STATEMENT] stats) := P){
 		env = initEnv();
-		env.input = input;
 		return evalStats(stats, env).output;
   	} 
-  	else 
-  		if(program(list[STATEMENT] stats) := P){
-			env = initEnv();
+   	throw "Program does not match the correct form";
+}
+
+// This is for programs with input
+public str evalProgram(PROGRAM P, str input){ 		
+	if(program(list[STATEMENT] stats) := P){
+		env = initEnv();
+		env.input = input;
 		return evalStats(stats, env).output;
   	} 
    	throw "Program does not match the correct form";
@@ -103,6 +105,15 @@ public ENV evalStat(read(), ENV env){
 	}
 }
 
+public void console(){                                        
+   createConsole("Brainfuck",                             
+                 "Please give one character of input:\n", 
+                 str (str inp) { 
+                 	return inp;
+                               });
+}
+
+
 public ENV evalStat(output(), ENV env){
 	env.output += stringChar(env.array[env.pointer]);
 	return env;
@@ -155,9 +166,9 @@ public str bottles = "\>+++++++++[\<+++++++++++\>-]\<[\>[-]\>[-]\<\<[\>+\>+\<\<-
 \>++++++++[\<+++++++++++\>-]\<-.\>++[\<-----------\>-]\<.+++++++++++
 ..\>+++++++++[\<----------\>-]\<-----.---.+++.---.[-]\<\<\<]";
 
+public str mult = ",\>,\<[\>[\>+\>+\<\<-]\>\>[\<\<+\>\>-]\<\<\<-]\>\>.";
 
-
-test bool HelloWorld(){
+test bool testLoad(){
 	 try load("\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
 	 		[\<++++\>-]\<.\>\>\>++++++++++[\<+++++ ++++\>-]\<---.\<\<\<\<.+++.------.--------.
 	 		\>\>+.");
