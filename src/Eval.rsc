@@ -53,12 +53,20 @@ public ENV evalStat(whileStat(list[STATEMENT] body), ENV env){
 }
 
 public ENV evalStat(incr(), ENV env){
-	env.array[env.pointer] += 1;
+	if(env.array[env.pointer] < 255){
+		env.array[env.pointer] += 1;
+		} else {
+		env.array[env.pointer] = 0;
+		}
 	return env;
 }
 
 public ENV evalStat(decr(), ENV env){
-	env.array[env.pointer] -= 1;
+	if(env.array[env.pointer] > 0){
+		env.array[env.pointer] -= 1;
+		} else {
+		env.array[env.pointer] = 255;
+		}
 	return env;
 }
 
@@ -146,7 +154,6 @@ public str bottles = "\>+++++++++[\<+++++++++++\>-]\<[\>[-]\>[-]\<\<[\>+\>+\<\<-
 ++++++++\>-]\<++++.------------.---.\>+++++++[\<----------\>-]\<+.
 \>++++++++[\<+++++++++++\>-]\<-.\>++[\<-----------\>-]\<.+++++++++++
 ..\>+++++++++[\<----------\>-]\<-----.---.+++.---.[-]\<\<\<]";
-
 
 test bool HelloWorld(){
 	 try load("\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
