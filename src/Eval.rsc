@@ -116,6 +116,7 @@ public void console(){
 
 public ENV evalStat(output(), ENV env){
 	env.output += stringChar(env.array[env.pointer]);
+	print(stringChar(env.array[env.pointer]));
 	return env;
 }
 

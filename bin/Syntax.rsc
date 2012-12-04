@@ -1,13 +1,13 @@
 module Syntax
 
-// lexical Char  = "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]";
+lexical Char  = "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]";
 
 layout Layout = WhitespaceAndComment* !>> [\ \t\n\r];
 
-lexical WhitespaceAndComment = [\ \t\n\r%];
+lexical WhitespaceAndComment = [\ \t\n\r];
 
 start syntax Program 
-   = program: Statement+ body;// Input* input;
+   = program: Statement+ body;
    
 syntax Statement 
 	= whileStat: "[" Statement+ body "]"
@@ -18,9 +18,6 @@ syntax Statement
 	| read: ","
 	| output: "."
 	;
-
-//syntax Input 
-//	= input: [.]* << "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]" !<< Input;
 
 // Parse Brainfuck code: 
 // (makes Parse Tree)
