@@ -105,11 +105,17 @@ public ENV evalStat(read(), ENV env){
 	}
 }
 
+public str input = "";
+
+public str getInput() {
+	return input;
+}
+
 public void console(){                                        
    createConsole("Brainfuck",                             
                  "Please give one character of input:\n", 
-                 str (str inp) { 
-                 	return inp;
+                 void (str inp) { 
+                 	return input = inp;
                                });
 }
 
