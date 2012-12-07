@@ -5,7 +5,7 @@ import Abstract;
 import ParseTree;
 	  	  
 public data PROGRAM =
-  program(list[STATEMENT] stats); //, str input);
+  program(list[STATEMENT] stats);
     
 public data STATEMENT =
       whileStat(list[STATEMENT] body)
