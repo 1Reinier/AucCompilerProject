@@ -8,8 +8,8 @@ alias Instrs = list[Instr];
 // Compile Program
 
 public Instrs compile(PROGRAM P){
-	visit(P){
-		case bla(): bla;
+	switch(P){
+		case incr(): bla;
 	}
 }
 
