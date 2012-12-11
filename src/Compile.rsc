@@ -8,12 +8,14 @@ alias Instrs = list[Instr];
 // Compile Program
 
 public Instrs compile(PROGRAM P){
-	
+	visit(P){
+		case bla(): bla;
+	}
 }
 
 // Unique label generation
 
-private int nLabel = 0;                            /*4*/
+private int nLabel = 0;
 
 private str nextLabel() {
   nLabel += 1;
