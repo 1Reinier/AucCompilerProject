@@ -5,11 +5,20 @@ import Prelude;
 alias Instr = str;
 alias Instrs = list[Instr];
 
-public Instrs compile(PROGRAM P){
+// Compile Program
 
+public Instrs compile(PROGRAM P){
+	
 }
 
+// Unique label generation
 
+private int nLabel = 0;                            /*4*/
+
+private str nextLabel() {
+  nLabel += 1;
+  return "L<nLabel>";
+}
 
 
 //public str main(str input){
