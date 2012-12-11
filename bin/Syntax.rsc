@@ -2,9 +2,9 @@ module Syntax
 
 lexical Char  = "+" | "-" | "\<" | "\>" | "." | "," | "[" | "]";
 
-layout Layout = WhitespaceAndComment* !>> [\ \t\n\r];
+layout Layout = WhitespaceAndComment* >> [+\-\<\>.,\[\]];
 
-lexical WhitespaceAndComment = [\ \t\n\r];
+lexical WhitespaceAndComment = ![+\-\<\>.,\[\]];
 
 start syntax Program 
    = program: Statement+ body;
