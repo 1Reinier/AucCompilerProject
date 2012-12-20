@@ -10,12 +10,26 @@ alias Instrs = list[Instr];
 alias Tape = list[int];
 alias ENV = tuple[int pointercounter, int counter, str code];
 
-public void compileToFile(PROGRAM P){
+public void compileToFile(PROGRAM P, str name){
 
 	ENV env = <0,0,"">;
+	
+	env.code += "
+	module <name>
+	
+	import Prelude;
+	
+	public str <name>(){
+	";
+	
 	for(instr <- P){
-		env = compile(P,env);
+		env = compile(instr,env);
 	}
+	
+	env.code += "
+	}";
+	
+	print(env.code);
 }
 
 public ENV compile(PROGRAM P, ENV env){
@@ -23,9 +37,24 @@ public ENV compile(PROGRAM P, ENV env){
 		case incr(): return incrementcounter(env);
 		case decr(): return incrementcounter(env);
 		case goright(): return incrementpointercounter(env);
-		case goleft(): env.pointercounter -= 1;
-		// case whileStat(): env
+		case goleft(): return decrementpointercounter(env);
+		case whileStat(list[STATEMENT] body): return whileloop(body,env);
 	}
+}
+
+public ENV whileloop (body,env){
+	if(env.pointercounter != 0){
+		env.code += "pointer += " + env.pointercounter + ";";
+	}
+	if(env.counter != 0){
+		env.code += "cells[" + env.pointercounter + "] += " + env.counter + ";";
+	}
+	//Not sure if it works with that > sign
+	env.code += "while(cells[" + env.pointercounter + "] \> 0) {";
+	for(instr <- body){
+		env = compile(instr,env);
+	}
+	return env;
 }
 
 public ENV incrementpointercounter(ENV env){
