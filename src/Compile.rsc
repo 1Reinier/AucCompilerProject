@@ -1,6 +1,7 @@
 module Compile
 
 import Prelude;
+extend Abstract;
 
 alias Instr = str;
 alias Instrs = list[Instr];
@@ -8,113 +9,151 @@ alias Instrs = list[Instr];
 // Compile Program
 
 alias Tape = list[int];
-alias ENV = tuple[int pointercounter, int counter, str code];
+alias ENV = tuple[int pointer, int counter, str code, STATEMENT nextStat];
 
 public void compileToFile(PROGRAM P, str name){
 
-	ENV env = <0,0,"">;
+	ENV env = <0, 0, "", incr()>;
+	
+	//The length is lowered for practical reasons
+	cells = for(L <- [1..250])
+				append 0;
+	
+	env.code += "module <name>
+	'import Prelude;
+	
+	'public void <name>(str input){
+	'	list[int] cells = <cells>;
+	'";
+	
+	if(program(list[STATEMENT] stats) := P){
+		for(n <- index(stats)){
+			try
+				env.nextStat = stats[n+1];
+			catch:
+				env.nextStat = read();
+			env = compile(stats[n],env);
+		}
+  	} 
 	
 	env.code += "
-	module <name>
+	'}";
 	
-	import Prelude;
-	
-	public str <name>(){
-	";
-	
-	for(instr <- P){
-		env = compile(instr,env);
-	}
-	
-	env.code += "
-	}";
-	
-	print(env.code);
+	save("<name>.rsc", env.code);
 }
 
-public ENV compile(PROGRAM P, ENV env){
-	switch(P){
+public ENV compile(S, ENV env){
+	switch(S){
 		case incr(): return incrementcounter(env);
-		case decr(): return incrementcounter(env);
-		case goright(): return incrementpointercounter(env);
-		case goleft(): return decrementpointercounter(env);
+		case decr(): return decrementcounter(env);
+		case goright(): return incrementpointer(env);
+		case goleft(): return decrementpointer(env);
 		case whileStat(list[STATEMENT] body): return whileloop(body,env);
+		case read(): return readfunction(env);
+		case output(): return outputfunction(env);
 	}
 }
 
-public ENV whileloop (body,env){
-	if(env.pointercounter != 0){
-		env.code += "pointer += " + env.pointercounter + ";";
-	}
-	if(env.counter != 0){
-		env.code += "cells[" + env.pointercounter + "] += " + env.counter + ";";
-	}
+public ENV whileloop (body, ENV env){
 	//Not sure if it works with that > sign
-	env.code += "while(cells[" + env.pointercounter + "] \> 0) {";
-	for(instr <- body){
-		env = compile(instr,env);
-	}
+	env.code += "	while(cells[<env.pointer>] \> 0) {
+	'";
+	for(n <- index(body)){
+			try
+				env.nextStat = body[n+1];
+			catch:
+				env.nextStat = read();
+			env = compile(body[n],env);
+		}
+	env.code += "	}
+	'";
 	return env;
 }
 
-public ENV incrementpointercounter(ENV env){
-	if(env.counter == 0){
-		env.pointercounter += 1;
-	}
-	else {
-		env.code += "cells[" + env.pointercounter + "] += " + env.counter + ";";
-	}
-	
+public ENV incrementpointer(ENV env){
+	env.pointer += 1;
 	return env;
 }
 
-public ENV decrementpointercounter(ENV env){
-	if(env.counter == 0){
-		env.pointercounter += -1;
-	}
-	else {
-		env.code += "cells[" + env.pointercounter + "] += " + env.counter + ";";
-	}
-	
+public ENV decrementpointer(ENV env){
+	env.pointer += -1;
 	return env;
 }
 
 public ENV incrementcounter(ENV env){
-	if(env.pointercounter == 0){
+	if(env.nextStat == incr()){
 		env.counter += 1;
 	}
 	else {
-		//we have to add a line to the end program
-		env.code += "pointer += " + env.pointercounter + ";";
+		env.counter += 1;
+		env.code += "	cells[<env.pointer>] += <env.counter>;
+	'";
+		env.counter = 0;
 	}
-	
 	return env;
 }
 
 public ENV decrementcounter(ENV env){
-	if(env.pointercounter == 0){
-		env.counter += -1;
+	if(env.nextStat == decr()){
+		env.counter += 1;
 	}
 	else {
-		//we have to add a line to the end program
-		env.code += "pointer += " + env.pointercounter + ";";
+		env.counter += 1;
+		env.code += "	cells[<env.pointer>] -= <env.counter>;
+	'";
+		env.counter = 0;
 	}
+	return env;
+}
+
+
+public void save(str name, str text){
+	writeFile(|file:///Users/joost/Documents/AP-Final/src| + name, text);
+}
+
+public ENV readfunction(ENV env){
+	env.code += "	cells[<env.pointer>] = chars(input)[0];
+				'	input = substring(input, 1);
+	'";
 	
 	return env;
 }
-public void save(str name, str text){
-	writeFile(|file:///Users/joost/Documents| + name, text);
+
+public ENV outputfunction(ENV env){
+	env.code += "	print(stringChar(cells[<env.pointer>]));
+	'";
+	return env;
 }
 
-public str  compilenoinput(str P, str name) {
-	return "
-	module <name>
-	
-	public str <name>(){
-		return <evalProgram(load(P))>;
-	}
-	";
+//NB: edit the file location in the function save!
+//To test below programs:
+//compileToFile(readwrite,"rw");
+//import rw; (this requires the save path to be in the same project folder!)
+//rw("abc"); will give output "abc"
+
+test bool tryCompile(){
+	try
+		compileToFile(helloWorld, "HW");
+	catch: return false;
+	return true;
 }
+
+
+//NB: this does not support input/output, use other function for that
+public void  compileNoInput(str P, str name) {
+	program = "module <name>
+	
+	'public void <name>(){
+	'	print(<evalProgram(load(P))>);
+	'}";
+	save("<name>.rsc", program);
+}
+
+public PROGRAM helloWorld = load("\>+++++++++[\<++++++++\>-]\<.\>+++++++[\<++++\>-]\<+.+++++ ++..+++.\>\>\>++++++++
+							[\<++++\>-]\<.\>\>\>++++++++++[\<+++++ ++++\>-]\<---.\<\<\<\<.+++.------.--------.
+							\>\>+.");
+							
+public PROGRAM readwrite = load(",.,.,.");
 
 
 

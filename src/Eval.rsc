@@ -113,21 +113,6 @@ public ENV evalStat(read(), ENV env){
 	}
 }
 
-public str input = "";
-
-public str getInput() {
-	return input;
-}
-
-public void console(){                                        
-   createConsole("Brainfuck",                             
-                 "Please give one character of input:\n", 
-                 void (str inp) { 
-                 	return input = inp;
-                               });
-}
-
-
 public ENV evalStat(output(), ENV env){
 	env.output += stringChar(env.array[env.pointer]);
 	print(stringChar(env.array[env.pointer]));
